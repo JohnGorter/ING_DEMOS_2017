@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="css/style.css" rel="stylesheet">
+    </head>
+    <body>
+dfdsfsd
+
+        <div id="placeholder"></div>
+
+        <template id="template">
+            <script>
+                alert('hello templates');
+            </script>
+            <img src="https://www.polymer-project.org/images/page-index/copenhagen.jpg" />
+        </template>
+
+        <button onclick="addContent()">Add content</button>
+
+        <script>   
+            function addContent(){  
+                var newnode = document.querySelector    ("#template").content;
+                document.querySelector("#placeholder").appendChild(document.importNode(newnode, true));
+            }
+        </script>
+    </body>
+</html>

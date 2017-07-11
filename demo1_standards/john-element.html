@@ -1,0 +1,51 @@
+    <template id="template">
+              <style>
+                h1 { 
+                    color:var(--mytitle-color, green);
+                }
+              </style>
+            <h1>Copenhagen</h1>
+            
+            <content></content>
+
+            <img height="150" src="https://www.polymer-project.org/images/page-index/copenhagen.jpg" />
+        </template>
+               <script>
+            console.log('you are touching me!');
+            </script>
+
+        <script>
+            // our imported html
+             var content = document.currentScript.ownerDocument.querySelector("#template").content;
+
+
+
+             customElements.define('john-element', class extends HTMLElement {
+                get open() { return this.hasAttribute('open'); }
+                set open(val) {
+                    if (val) {
+                        this.setAttribute('open', '');
+                    } else {
+                        this.removeAttribute('open');
+                    }
+                }
+                constructor() {
+                    // /<style>h1 { color:red}</style>
+                    super();
+                   
+                    this.addEventListener('click', e => {
+                      console.log('clicked me!');
+                      this.open = !this.open;
+                    });
+                }
+                logSomething() { console.log('something')}
+
+                connectedCallback() {
+                    var root = this.createShadowRoot();
+                    root.appendChild(document.importNode(content, true));
+                }
+                
+           })
+        </script>
+
+  

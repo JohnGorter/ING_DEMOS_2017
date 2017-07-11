@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>
+    
+        </title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+       <link rel="import" href="https://cdn.rawgit.com/download/polymer-cdn/1.5.0/lib/polymer/polymer.html"/>
+    </head>
+    <body>
+        <h1>Todo App</h1>
+        <style>
+            .done { text-decoration: line-through}
+        </style>
+
+    <dom-module id="my-app">
+        <template>
+           <template is="dom-repeat" items="[[todos]]">
+               <div on-tap="onselect" class$="{{_getClass(item.done)}}" >{{item.title}}</div>
+           </template>
+
+           <hr/>
+           {{ selectedTodo.title }}
+           {{ selectedTodo.description }}
+           {{ selectedTodo.done }}
+           <button on-tap="setDone">done</button>
+        </template>
+        <script>
+        Polymer({
+          is:'my-app',
+          observers:['_logUserChange(chat.user)', '_logChatsChange(chats.splices)'],
+          properties:{
+              todos:{
+                  type:Array, 
+                  value:[
+                      { title:'let the elephants out', description:'bla', done:false},
+                      { title:'let the monkeys out', description:'bla', done:false},
+                      { title:'let the ducks out', description:'bla', done:false},
+                      { title:'let the children out', description:'bla', done:false},
+                      { title:'let the dogs out', description:'bla', done:false},
+                      { title:'let the cats out', description:'bla', done:true}
+                   ]
+              }
+          },
+          _getClass(done){
+              return done ? "done":"";
+          },
+          onselect(){
+              this.selectedTodo = event.model.item;
+          },
+          setDone(){
+              this.set('selectedTodo.done',true);
+              // one line of code...
+          }
+        })
+        </script>
+    </dom-module>
+
+    <my-app></my-app>
+
+    </body>
+</html>

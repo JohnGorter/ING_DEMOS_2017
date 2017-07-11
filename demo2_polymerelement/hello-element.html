@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script>window.ShadyDOM = { force: true };</script>
+        <script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+        <link rel="import" href="/bower_components/polymer/polymer.html" />
+    </head>
+    <body>
+        <h1>Our catalog</h1>
+
+        <dom-module id="shop-cart">
+            <template>
+                <style>
+                    :host { background-color:red};
+                    :host[paid] { background-color:green};
+                </style>
+                <h1 on-tap="pay">{{carttitle}}</h1>  <!-- get_carttitle / set_carttitle-->
+                <h1>{{fullname}}</h1>  <!-- get_carttitle / set_carttitle-->
+                <hr>
+                <button>checkout</button>
+           
+                <button id="btnPay" on-tap="clickbutton">pay</button>
+            </template>
+            <script>
+                Polymer({
+                    is:'shop-cart',
+                    properties:{
+                        paid:{
+                            reflectToAttribute:true,
+                            type:Boolean
+                        },
+                        carttitle: {
+                            observer:'_logTitle',
+                            type:String, 
+                            value:'no title',
+                            notify:false, // carttitle-changed,
+                            reflectToAttribute:true
+                        },
+                        firstname:{
+                            type:String,
+                            value:'john'
+                        },
+                        lastname:{
+                            type:String,
+                            value:'gorter'
+                        },
+                        fullname:{
+                            computed:'_getFullname(firstname, lastname)'
+                        }
+                    },
+                    _logTitle(){
+                        console.log('title changed');
+                    },
+                    pay(){
+                        this.$.btnPay.innerHTML = 'paaaay';
+                        this.$.btnPay.click();
+                    },
+                    clickbutton(){
+                        console.log('click button');
+                        this.paid = true;
+                    },
+                    _getFullname(){
+                        return this.firstname + " : " + this.lastname;
+                    }
+                });
+            
+            </script>   
+        </dom-module>
+
+        <shop-cart carttitle='Here are your items'></shop-cart>
+
+        <script>
+            document.querySelector("shop-cart").addEventListener('carttitle-changed', ()=>{
+                console.log('cart items changed');
+            });
+       </script>
+
+    </body>
+</html>
