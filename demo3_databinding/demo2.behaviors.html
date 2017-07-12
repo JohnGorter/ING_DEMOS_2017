@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>
+    
+        </title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+       <link rel="import" href="https://cdn.rawgit.com/download/polymer-cdn/1.5.0/lib/polymer/polymer.html"/>
+    </head>
+
+      <script>
+           myBehavior = {
+               listeners:{
+                   'click': '_clicked'
+               },
+               observers:[],
+               properties:{
+                   selected:{
+                       type:Boolean,
+                       reflectToAttribute:true
+                   }
+               },
+               registered(){},
+               select(){
+                   console.log('selected me');
+                   this.selected = !this.selected;
+               },
+               _clicked(){
+                   console.log('clicked on me');
+                   this.selected = !this.selected;
+               }
+           }
+      </script>
+
+    <body>
+        <dom-module id="my-app">
+            <template>
+            <p>hello world</p>
+            </template>
+            <script>
+            Polymer({
+            is:'my-app',
+            behaviors:[myBehavior],
+            ready(){
+                console.log("component ready");
+            },
+            attributeChanged: function(name, type) {
+                console.log(this.localName + '#' + this.id + ' attribute ' + name +
+                ' was changed to ' + this.getAttribute(name));
+            }
+            });
+            </script>
+        </dom-module>
+
+       <my-app selected="{{myvalue}}" ></my-app>
+
+     
+
+    </body>
+</html>

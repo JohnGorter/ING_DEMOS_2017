@@ -6,21 +6,27 @@
         </title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-       <link rel="import" href="https://cdn.rawgit.com/download/polymer-cdn/1.5.0/lib/polymer/polymer.html"/>
+       <script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+        <link rel="import" href="/bower_components/polymer/polymer.html" />
     </head>
     <body>
         <h1>Todo App</h1>
-        <style>
-            .done { text-decoration: line-through}
-        </style>
+       
 
     <dom-module id="my-app">
         <template>
-           <template is="dom-repeat" items="[[todos]]">
-               <div on-tap="onselect" class$="{{_getClass(item.done)}}" >{{item.title}}</div>
+             <style>
+            .done { text-decoration: line-through}
+            </style>
+           <template is="dom-repeat" items="[[todos]]" filter="_filter" sort="{{_sort(sortorder)}}" observe="done
+           ">
+               <div on-tap="onselect" class$="{{_getClass(item.done)}}" >{{item.prio}} {{item.title}}</div>
            </template>
+           <button on-tap="resort">sort flip</button>
+           <array-selector id="selector" items="{{todos}}" selected="{{selectedTodo}}"></array-selector>
 
            <hr/>
+           {{ selectedTodo.prio }}
            {{ selectedTodo.title }}
            {{ selectedTodo.description }}
            {{ selectedTodo.done }}
@@ -31,29 +37,44 @@
           is:'my-app',
           observers:['_logUserChange(chat.user)', '_logChatsChange(chats.splices)'],
           properties:{
+              sortorder:{
+                  type:Boolean,
+                  value:false
+              },
               todos:{
                   type:Array, 
                   value:[
-                      { title:'let the elephants out', description:'bla', done:false},
-                      { title:'let the monkeys out', description:'bla', done:false},
-                      { title:'let the ducks out', description:'bla', done:false},
-                      { title:'let the children out', description:'bla', done:false},
-                      { title:'let the dogs out', description:'bla', done:false},
-                      { title:'let the cats out', description:'bla', done:true}
+                      {prio:1, title:'let the elephants out', description:'bla', done:false},
+                      {prio:2, title:'let the monkeys out', description:'bla', done:false},
+                      {prio:1, title:'let the ducks out', description:'bla', done:false},
+                      {prio:3, title:'let the children out', description:'bla', done:false},
+                      {prio:1, title:'let the dogs out', description:'bla', done:false},
+                      {prio:10, title:'let the cats out', description:'bla', done:true}
                    ]
               }
           },
+          resort(){
+              this.sortorder = !this.sortorder;
+          },
+          _sort(){
+              return function(item, item2){
+                 return this.sortorder ? (item.prio < item2.prio) : (item2.prio < item.prio);
+              }.bind(this);
+          },
+          _filter(item){
+              return !item.done;
+          },
           _getClass(done){
-              return done ? "done":"";
+              console.log(done);
+             return done ? "done" : "";
           },
           onselect(){
-              this.selectedTodo = event.model.item;
+            this.$.selector.select(event.model.item);
           },
           setDone(){
               this.set('selectedTodo.done',true);
-              // one line of code...
           }
-        })
+        });
         </script>
     </dom-module>
 

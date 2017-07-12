@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+         <link rel="import" href="https://cdn.rawgit.com/download/polymer-cdn/1.5.0/lib/polymer/polymer.html"/>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Faker/3.1.0/faker.js"></script>
+    </head>
+    <body>
+
+        wqewqwqe
+
+    <dom-module id="child-one">
+        <template>
+            <template items="[[items]]">
+                <div>{{item}}</div>
+            </template>
+        </template>
+        <script>
+        Polymer({
+          is:'child-one'
+        })
+        </script>
+    </dom-module>
+
+    <dom-module id="child-two">
+        <template>
+                <template is="dom-repeat" items="{{sample}}">
+                    <div> {{item.name}} <img src="{{item.img}}"/></div>
+                </template>
+        </template>
+        <script>
+        Polymer({
+            properties:{
+                sample:{
+                    type:Array,
+                    value:[],
+                    notify:true,
+                }
+            },
+          is:'child-two',
+          ready(){
+                // fake some data..
+                for (var i=0; i< 100;i++){
+                    this.push('sample',{
+                        name: faker.name.findName(),
+                        email: faker.internet.email(),
+                        cc: faker.helpers.createCard(),
+                        img: faker.image.avatar()
+                    });
+                }
+          }
+        })
+        </script>
+    </dom-module>
+
+    <dom-module id="my-app">
+        <template>
+
+            erewrewr
+            <child-one items="{{items}}"></child-one>
+            <child-two sample="{{items}}"></child-two>
+        </template>
+        <script>
+        Polymer({
+          is:'my-app'
+        })
+        </script>
+    </dom-module>
+
+    <my-app></my-app>
+
+
+    </body>
+</html>

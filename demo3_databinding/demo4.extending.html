@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="css/style.css" rel="stylesheet">
+         <link rel="import" href="https://cdn.rawgit.com/download/polymer-cdn/1.5.0/lib/polymer/polymer.html"/>
+    </head>
+    <body>
+
+        <dom-module id="address-card">
+            <template>
+                <h1>Address card</h1>
+                {{ address.street }}
+                {{ address.number }}
+                <button on-tap="changeStreet">Update Street</button>
+                <button on-tap="changeNumber">Update Number</button>
+            </template>
+            <script>
+            Polymer({
+              is:'address-card',
+              properties:{
+                  address:{
+                      type:Object,
+                      value:{}
+                  }
+              },
+              changeStreet(){
+                  this.set('address.street', "hi3orehtioeht");
+              },
+               changeNumber(){
+                  this.set('address.number', 1);
+              }
+            })
+            </script>
+        </dom-module>
+
+       <dom-module id="user-profile">
+        <template>
+            primary address: {{ primaryAddress.street }} {{primaryAddress.number}}
+            <address-card
+                address="{{primaryAddress}}" on-address-changed="_addressChange2"></address-card>
+        </template>
+        <script>
+            Polymer({
+                is:'user-profile',
+                observers:['_addressChange(primaryAddress)', '_addressChange3(primaryAddress.*)'],
+                properties:{
+                    primaryAddress:{
+                        type:Object, 
+                        value:{ street:'bla', number:65}
+                    }
+                },
+                _addressChange(primaryAddress){
+                    console.log('1. the primary address actually did change');
+                },
+                _addressChange2(primaryAddress){
+                    console.log('2. the primary address actually did change', event);
+                },
+                _addressChange3(primaryAddress){
+                    console.log('3. the primary address actually did change', event);
+                }
+
+            })
+        </script>
+        </dom-module>
+    
+        <user-profile></user-profile>
+    </body>
+</html>

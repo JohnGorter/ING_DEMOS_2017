@@ -1,0 +1,38 @@
+<dom-module id="chat-list">
+    <template>
+        
+        <button on-tap="toggleFilter">filter out our own messages</button>
+        <button on-tap="_sort">Sort</button>
+        <template id="list" is="dom-repeat" items="[[items]]" filter="{{_filter(activefilter)}}" sort="{{_sort(items.*)}}" observe="name">
+            <div>{{item.time}} {{item.name}} says: {{item.message}}</div>
+        </template>
+    </template>
+    <script>
+    Polymer({
+      is:'chat-list',
+      properties:{
+          activefilter:{
+              type:String, 
+              value:""
+          },
+          filterarg:{
+              type:String, 
+              value:'john'
+          }
+      },
+      toggleFilter(){
+        this.activefilter = this.activefilter == this.filterarg ? "" : this.filterarg;
+      },
+      _sort(){
+          return function(a, b){
+              return a.time < b.time;
+          }
+      },
+      _filter(){
+          return function(item) {          
+              return item.name != this.activefilter;
+          }.bind(this);
+      }
+    })
+    </script>
+</dom-module>

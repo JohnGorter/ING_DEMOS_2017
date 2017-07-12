@@ -1,0 +1,69 @@
+<dom-module id="chat-app">
+    <template>
+        <style include="app-theme">
+            .content { margin:15px;}
+        </style>
+
+        <app-header-layout>
+            <app-header slot="header" fixed condenses effects="waterfall">
+                <app-toolbar>
+                    <paper-icon-button on-tap="toggle" icon="menu"></paper-icon-button>
+                    <div main-title>App name</div>
+                </app-toolbar>
+            </app-header>
+            <div class="content">
+                <iron-pages selected="{{selected}}">
+                    <div>
+                        <chat-list items="[[chatmessages]]" filterarg="[[user]]"></chat-list>
+                        <hr/>
+                        <chat-entry on-message-entered="_messageEntered" ></chat-entry>
+                    </div>
+                    <div>
+                        http://ilikerobots.github.io/polymer-app-layout-demos/templates/test_drive/
+                    </div>
+                </iron-pages>
+            </div>
+        </app-header-layout>
+
+        <app-drawer id="drawer" swipe-open>
+            <app-toolbar>
+                    <div main-title>Settings</div>
+            </app-toolbar>
+            <div class="drawer-contents">
+                <paper-listbox selected="{{selected}}" on-iron-select="closeDrawer">
+                    <paper-item>Main window</paper-item>
+                    <paper-item>Settings</paper-item>
+                </paper-listbox>
+            </div>
+        </app-drawer>
+
+    </template>
+    <script>
+    Polymer({
+      is:'chat-app',
+      properties:{
+          selected:{
+             type:Number, 
+             value:0 
+          },
+          user:{
+              type:String,
+              value:'john'
+          },
+          chatmessages:{
+              type:Array,
+              value:[]
+          }
+      },
+      closeDrawer(){
+          this.$.drawer.close();
+      },
+      toggle(){
+          this.$.drawer.toggle();
+      },
+      _messageEntered(){
+          this.push('chatmessages', event.detail.item);
+      }
+    })
+    </script>
+</dom-module>
