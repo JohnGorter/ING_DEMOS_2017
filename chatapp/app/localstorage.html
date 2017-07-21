@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+       <head>
+        <link rel="import" href="https://cdn.rawgit.com/download/polymer-cdn/1.5.0/lib/polymer/polymer.html" />
+        <link rel="import" href="https://cdn.rawgit.com/download/polymer-cdn/1.5.0/lib/app-elements/app-elements.html" />
+        <link rel="import" href="https://cdn.rawgit.com/download/polymer-cdn/1.5.0/lib/paper-elements/paper-elements.html" />
+        <link rel="import" href="https://cdn.rawgit.com/download/polymer-cdn/1.5.0/lib/iron-elements/iron-elements.html" />
+    </head>
+    <body>
+
+        <dom-module id="my-app">
+            <template>
+
+                Type a letter: <input type="text" value="{{letter::change}}" /><button on-tap="addItem">Add</button>
+
+               <template is="dom-repeat" items="{{items}}">
+                    <div>{{item}}</div>
+                </template>
+
+                 <iron-localstorage name="bla" value="{{items}}"  on-iron-localstorage-load-empty="init"></iron-localstorage> 
+                 
+
+            </template>
+            <script>
+            Polymer({
+              is:'my-app',
+              properties:{
+                  items:{
+                      type:Array
+                  },
+              },
+              init(){
+                  this.items = [];
+              },
+              addItem(){
+                  this.push('items', this.letter);
+              }
+            })
+            </script>
+        </dom-module>
+        <my-app></my-app>
+    </body>
+</html>

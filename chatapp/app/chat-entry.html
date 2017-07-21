@@ -1,0 +1,23 @@
+<dom-module id="chat-entry">
+    <template>
+
+        User: <input type="text" value="{{item.name::change}}"/> <br/>
+        Message: <input type="text" value="{{item.message::change}}"/> <br/>
+        <button on-tap="_saveMessage">save</button>
+    </template>
+    <script>
+    Polymer({
+      is:'chat-entry',
+      properties:{
+          item:{
+              type:Object,
+              value:{}
+          }
+      },
+      _saveMessage(){
+          this.item.time = new Date(); 
+          this.fire('message-entered', { item: JSON.parse(JSON.stringify(this.item)) } );
+      }
+    })
+    </script>
+</dom-module>

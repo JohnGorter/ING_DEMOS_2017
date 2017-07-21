@@ -1,0 +1,33 @@
+<dom-module id="chat-search">
+    <template>
+        <style>
+            #search {z-index:99;display:flex;background-color:white;height:40px;top:10px;position:fixed;left:100vw;width:85vw;transition:all 0.2s}
+            #search.show { position:fixed;left:10px;width:85vw;}
+        </style>
+        <div id="search" class="">
+            <input type="Text" placeholder="search" style="width:100vw;font-size:18px;" value="{{search::change}}"/>
+            <paper-icon-button icon="arrow-forward"></paper-icon-button>
+        </div>
+    </template>
+    <script>
+    Polymer({
+      is:'chat-search',
+      properties:{
+          searchbar:{
+              type:Boolean,
+              value:false
+          },
+          search:{
+              type:String, 
+              notify:true
+          }
+      },
+      openSearch(){
+          this.searchbar = !this.searchbar;
+          if (!this.searchbar) this.search = "";
+          this.toggleClass('show', this.searchbar, this.$.search);
+          
+      },
+    })
+    </script>
+</dom-module>

@@ -1,0 +1,100 @@
+<dom-module id="chat-app">
+    <template>
+        <style include="app-theme">
+            .content { margin:15px;}
+            .logo { display:flex;flex-flow:column;align-content: center;align-items: center;justify-content: center}
+        </style>
+
+        <app-header-layout>
+            <app-header slot="header" style="height:200px;" fixed condenses effects="waterfall">
+                <app-toolbar>
+                    <paper-icon-button on-tap="toggle" icon="menu"></paper-icon-button>
+                    <div main-title>ThatsApp</div>
+                    <paper-icon-button on-tap="openSearch" icon="search"></paper-icon-button>
+                </app-toolbar>
+                <div class="logo"><img src="./images/logo.svg" height="100" /></div>
+            </app-header>
+            <div class="content">
+                <iron-pages selected="{{selected}}">
+                    <div>
+                        <template is="dom-if" if="{{user}}">
+                            <chat-list items="[[chatmessages]]" filterarg="[[search]]"></chat-list>
+                            <hr/>
+                            <chat-entry on-message-entered="_messageEntered" ></chat-entry>
+                        </template>
+                    </div>
+                    <div>
+                        http://ilikerobots.github.io/polymer-app-layout-demos/templates/test_drive/
+                    </div>
+                </iron-pages>
+            </div>
+        </app-header-layout>
+
+        <app-drawer id="drawer" swipe-open>
+            <app-toolbar>
+                    <div main-title>Settings</div>
+            </app-toolbar>
+            <div class="drawer-contents">
+                <paper-listbox selected="{{selected}}" on-iron-select="closeDrawer">
+                    <paper-item>Main window</paper-item>
+                    <paper-item>Settings</paper-item>
+                </paper-listbox>
+            </div>
+        </app-drawer>
+
+         <!-- <iron-localstorage name="chatitems" value="{{chatmessages}}"  on-iron-localstorage-load-empty="init"></iron-localstorage> 
+         -->
+         <!-- <iron-ajax id="getter" auto url="/data/chats" handle-as="json" last-response="{{chatmessages}}"></iron-ajax>
+         <iron-ajax id="poster" url="/data/chat" method="post" body="{{newchat}}" content-type="application/json" handle-as="json"></iron-ajax> -->
+
+         <firebase-app 
+            name="myapp" 
+            api-key="AIzaSyD-SZGNaAtAjt2oMbdNT2WrD0d4WXzKl7o" 
+            auth-domain="my-proj-c0a27.firebaseapp.com"  
+            database-url="https://my-proj-c0a27.firebaseio.com"
+            project-id="my-proj-c0a27"></firebase-app>
+
+
+         <firebase-query id="fbquery" app-name="myapp" path="chats" data="{{chatmessages}}"></firebase-query>
+
+           <firebase-auth app-name="myapp" id="auth" user="{{user}}" provider="google" on-error="handleError">
+         </firebase-auth>
+
+         {{user.email}}
+
+        <chat-search id="searchBar" search="{{search}}"></chat-search>
+
+          <platinum-sw-register skip-waiting
+                            auto-register>
+        <platinum-sw-cache></platinum-sw-cache>
+      </platinum-sw-register>
+    
+
+    </template>
+    <script>
+    Polymer({
+      is:'chat-app',
+      observers:['_messagesChanged(chatmessages.splices)'],
+      properties:{
+          selected:     { type:Number, value:0 },
+          search:       { type:String, value:'' },
+          chatmessages: { type:Array }
+      },
+      ready(){
+        this.$.auth.signInWithPopup();
+      },
+      init()        { this.chatmessages = []; },
+      openSearch()  { this.$.searchBar.openSearch(); },
+      closeDrawer() { this.$.drawer.close(); },
+      toggle()      { this.$.drawer.toggle(); },
+
+      _messageEntered() { 
+          this.$.fbquery.ref.push({
+          message : event.detail.item.message,
+          time : event.detail.item.time,
+          name : this.user.email
+      })},
+      _messagesChanged(){ this.debounce("scroll", ()=>{  window.scrollTo(0,document.body.scrollHeight); }, 25); }
+    })
+    </script>
+</dom-module>

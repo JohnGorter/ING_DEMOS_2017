@@ -2,19 +2,22 @@
     <template>
         <style include="app-theme">
             .content { margin:15px;}
+            .logo { display:flex;flex-flow:column;align-content: center;align-items: center;justify-content: center}
         </style>
 
         <app-header-layout>
-            <app-header slot="header" fixed condenses effects="waterfall">
+            <app-header slot="header" style="height:200px;" fixed condenses effects="waterfall">
                 <app-toolbar>
                     <paper-icon-button on-tap="toggle" icon="menu"></paper-icon-button>
-                    <div main-title>App name</div>
+                    <div main-title>ThatsApp</div>
+                    <paper-icon-button on-tap="openSearch" icon="search"></paper-icon-button>
                 </app-toolbar>
+                <div class="logo"><img src="./images/logo.svg" height="100" /></div>
             </app-header>
             <div class="content">
                 <iron-pages selected="{{selected}}">
                     <div>
-                        <chat-list items="[[chatmessages]]" filterarg="[[user]]"></chat-list>
+                        <chat-list items="[[chatmessages]]" filterarg="[[search]]"></chat-list>
                         <hr/>
                         <chat-entry on-message-entered="_messageEntered" ></chat-entry>
                     </div>
@@ -37,33 +40,40 @@
             </div>
         </app-drawer>
 
+         <!-- <iron-localstorage name="chatitems" value="{{chatmessages}}"  on-iron-localstorage-load-empty="init"></iron-localstorage> 
+         -->
+         <!-- <iron-ajax id="getter" auto url="/data/chats" handle-as="json" last-response="{{chatmessages}}"></iron-ajax>
+         <iron-ajax id="poster" url="/data/chat" method="post" body="{{newchat}}" content-type="application/json" handle-as="json"></iron-ajax> -->
+
+         <firebase-app 
+            name="myapp" 
+            api-key="AIzaSyD-SZGNaAtAjt2oMbdNT2WrD0d4WXzKl7o" 
+            auth-domain="my-proj-c0a27.firebaseapp.com"  
+            database-url="https://my-proj-c0a27.firebaseio.com"
+            project-id="my-proj-c0a27"></firebase-app>
+
+
+         <firebase-query id="fbquery" app-name="myapp" path="chats" data="{{chatmessages}}"></firebase-query>
+
+        <chat-search id="searchBar" search="{{search}}"></chat-search>
+
     </template>
     <script>
     Polymer({
       is:'chat-app',
+      observers:['_messagesChanged(chatmessages.splices)'],
       properties:{
-          selected:{
-             type:Number, 
-             value:0 
-          },
-          user:{
-              type:String,
-              value:'john'
-          },
-          chatmessages:{
-              type:Array,
-              value:[]
-          }
+          selected:     { type:Number, value:0 },
+          search:       { type:String, value:'' },
+          chatmessages: { type:Array }
       },
-      closeDrawer(){
-          this.$.drawer.close();
-      },
-      toggle(){
-          this.$.drawer.toggle();
-      },
-      _messageEntered(){
-          this.push('chatmessages', event.detail.item);
-      }
+      init()        { this.chatmessages = []; },
+      openSearch()  { this.$.searchBar.openSearch(); },
+      closeDrawer() { this.$.drawer.close(); },
+      toggle()      { this.$.drawer.toggle(); },
+
+      _messageEntered() { this.$.fbquery.ref.push(event.detail.item); },
+      _messagesChanged(){ this.debounce("scroll", ()=>{  window.scrollTo(0,document.body.scrollHeight); }, 25); }
     })
     </script>
 </dom-module>

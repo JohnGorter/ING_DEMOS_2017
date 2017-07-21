@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+              <script src="https://cdnjs.cloudflare.com/ajax/libs/web-animations/2.2.5/web-animations-next.min.js"></script>
+    </head>
+    <style>
+        #container {background-color:silver;height:95vh;width:95vw;display:flex;justify-content: space-between} 
+        .blokje { background-color:coral;width:50px;height:50px;margin:10px}
+        .paddle { background-color:navy;width:100px;height:20px;position:absolute;left:10vw;;
+
+        }
+    </style>
+    <body>
+
+        <div id="container">
+            <div class="blokje" onclick="fallDown(this);"></div>
+            <div class="blokje" onclick="fallDown(this);"></div>
+            <div class="blokje" onclick="fallDown(this);"></div>
+            <div class="blokje" onclick="fallDown(this);"></div>
+            <div class="blokje" onclick="fallDown(this);"></div>
+            <div class="paddle" onclick="fallDown(this);"></div>
+        </div>
+
+        <script>
+        function fallDown(elem){
+            var keyframes = [
+                {transform:'translateY(0)', opacity:1},
+                {transform:'translateY(80vh)', opacity:0},
+            ];
+            var timings = {
+                duration: 700,
+                iterations: 1,
+                delay: 10,
+            } 
+            var kEffects = [
+                new KeyframeEffect(elem, keyframes, timings)
+            ];
+            var group = new GroupEffect(kEffects);
+            document.timeline.play(group);
+
+
+        }
+
+        requestAnimationFrame(refresh);
+        function refresh(){
+            var divs = document.querySelectorAll(".blokje");
+            Array.prototype.slice.call(divs).forEach(function(element, index) {
+                var rect = element.getBoundingClientRect();
+                element.innerHTML = rect.left + " : " + rect.top;
+            });
+            requestAnimationFrame(refresh);
+        }
+        </script>
+                <script>
+            var movedir;
+            var moving;
+            var interval;
+            var width = parseInt(document.querySelector("#container").getBoundingClientRect().width);
+            window.addEventListener('keydown', function(e){
+                if (moving) return;
+                if (e.code == "ArrowLeft" || e.code == "ArrowRight"){
+                    moving = true;
+                    movedir = (e.code == "ArrowLeft") ? 0: 1
+                    startMoving();
+                }   
+            });
+            window.addEventListener('keyup', function(e){
+                if (e.code == "ArrowLeft" || e.code == "ArrowRight")
+                    stopMoving();
+            });
+            function hittest(){
+                var rect = document.querySelector("paddle").get
+            }
+            function startMoving(){
+                movePaddle(movedir);
+                hittest();
+                if (movedir !== -1) 
+                    requestAnimationFrame(startMoving);
+            }
+            function stopMoving(){
+                movedir = -1;
+                moving = false;
+                clearInterval(interval);
+            }
+            function movePaddle(moveleft){
+                if (moveleft == -1) return;
+                var left = parseInt(document.querySelector(".paddle").getBoundingClientRect().left);
+                
+                left = moveleft == 0 ? left - 5 : left + 5;
+                if (left <= 0) left = 0;
+                if (left >= width) left = width;
+
+                document.querySelector(".paddle").style.left = parseInt(left) + 'px';
+            }
+        </script>
+    </body>
+</html>

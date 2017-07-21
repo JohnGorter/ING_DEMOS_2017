@@ -5,6 +5,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="import" href="includes.html" />
+        <link rel="manifest" href="./manifest.json">
         <style>
             /* General */
             * { 
@@ -24,6 +25,10 @@
         </style>
     </head>
     <body>
+        
         <chat-app></chat-app>
+        <script>
+            navigator.serviceWorker.register('sw-import.js');
+        </script>
     </body>
 </html>

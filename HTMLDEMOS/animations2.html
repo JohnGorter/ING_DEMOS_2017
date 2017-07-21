@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="css/style.css" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/web-animations/2.2.5/web-animations-next.min.js"></script>
+    </head>
+    <body>
+        <style>
+            .blok { position:relative;background-color:antiquewhite;width:30px;height:10px;border-radius:2px;}
+            .container { width:95vw;height:95vh; background-color:coral;display:flex;justify-content: center;}
+            .div2 { align-self:flex-end;margin:5px; width:80vw;height:20px; background-color:navy;color:white;font-family:helvetica;}
+        </style>
+        <div id="controls">
+                <button onclick="pauseAll();">Play</button>
+            </div>
+        <div class="container">
+            <div class="blok"></div>
+            <div class="blok"></div>
+            <div class="blok"></div>
+            <div class="blok"></div>
+            <div class="blok"></div>
+            <div class="blok"></div>
+            <div class="div2">footer</div>
+        </div>
+        <script>
+            var keyframes = [
+                {transform:'translateY(0)', opacity:0.5, backgroundColor:'red'},
+                {transform:'translateY(75vh)', opacity:1, backgroundColor:'orange'},
+                {transform:'translateY(85vh)', opacity:1, backgroundColor:'orange'},
+            ];
+            var timings = {
+                duration: 700,
+                iterations: Infinity,
+                direction: 'alternate',
+                fill: 'forwards',
+                delay: 0,
+                easing: 'ease-in-out'
+            };
+           Array.prototype.slice.call(document.querySelectorAll('.blok')).forEach(function(blok, index){
+                console.log('starting animation: ', blok);
+                timings.delay = index * 50;
+                
+                blok.animate(keyframes,timings);
+            });
+
+            var button = document.querySelector('button');
+            button.addEventListener('click', function(e) {
+                var players;
+                if (typeof document.getAnimations === 'function') {
+                    players = document.getAnimations();
+                } else {
+                    players = document.timeline.getAnimations();
+                }
+                if (players && players.length) {
+                    console.log(players);
+                    var action;
+                    if (players[0].playState === 'running') {
+                    action = 'pause';
+                    } else if (players[0].playState === 'paused') {
+                    action = 'play';
+                    } else {
+                    return;
+                    }
+                    players.forEach(function(player, i, ra) {
+                        player[action](); //player.pause() or player.play()
+                    });
+                }
+             });
+            
+        </script>
+    </body>
+</html>

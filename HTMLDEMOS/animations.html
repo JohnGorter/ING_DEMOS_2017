@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="css/style.css" rel="stylesheet">
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/web-animations/2.2.5/web-animations-next.min.js"></script>
+
+    </head>
+    <body>
+        <style> #animation { position:absolute;font-size: 4rem; font-family: Helvetica, sans-serif;}</style>
+        <div id="state"></div>
+        <div id="time"></div>
+        <div id="controls">
+            <button onclick="player.play()">Play</button>
+            <button onclick="player.pause()">Pause</button>
+            <button onclick="player.cancel()">cancel</button>
+            <button onclick="player.finish()">Finish</button><br/>
+            <button onclick="player.playbackRate = 0.1">Superslow</button>
+            <button onclick="player.playbackRate = 0.5">slowdown</button>
+            <button onclick="player.playbackRate = 1">normal</button>
+            <button onclick="player.playbackRate = 2">Speedup</button>
+            <button onclick="player.playbackRate = 10">unbelevablespeed</button>
+        </div>
+        <h1 id="animation">test</h1>
+        <script>
+
+            var frames = [
+                { transform: 'scale(1) rotate(-2deg)', offset: 0, opacity: 1 }, 
+                { transform: 'scale(.3) rotate(5deg)', opacity: .2, offset: .333333 }, 
+                { transform: 'scale(.567) rotate(-3deg)', opacity: .567, offset: .666667 }, 
+                { transform: 'scale(.5) rotate(2deg)', opacity: .4, offset: 1 }];
+var timings = {
+  duration: 1700,
+  iterations: Infinity,
+  direction: 'alternate',
+  fill: 'forwards',
+  delay: 0,
+  easing: 'ease-in-out'
+};
+
+            var player = document.querySelector("#animation").animate(frames, timings);
+
+            setInterval(() => {
+                document.querySelector("#state").innerHTML = 'Animation is ' + player.playState;
+                document.querySelector("#time").innerHTML = player.currentTime;
+            }, 50);
+
+            player.onfinish = () => { player.reverse();};
+        </script>
+    </body>
+</html>
